@@ -1,0 +1,18 @@
+package week10;
+
+import java.util.ArrayList;
+
+import week10.vo.Student;
+import week10.dao.StudentDao;
+import week10.vo.Result;
+
+public class Driver {
+
+	public static void main(String[] args) {
+		ArrayList<Student> list = StudentDao.inputFromKeyBoard();
+		ArrayList<Result> listResult = StudentDao.calulateProvince(list);
+		StudentDao.display(list,listResult);
+	}
+
+
+}
