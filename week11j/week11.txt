@@ -1,0 +1,109 @@
+package week11;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.PrintWriter;
+import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+public class FileTest {
+	public static void main(String[] args) {
+		try{
+			String fileName = "d:/java/Questions.txt";
+			//1.修水管
+			File aFile = new File(fileName);
+			//2.装水管
+			FileReader fr = new FileReader(aFile);
+			//3.装水龙头
+			BufferedReader bf = new BufferedReader(fr);
+			//4.打开水龙头
+			String aLine = "";
+			while((aLine=bf.readLine())!=null){
+				System.out.println(aLine);
+
+				String aLineOfData;
+				aLineOfData = deal(aLine);
+				File oFl = new File("d:/java/Answers.txt");
+				FileWriter fwt = new FileWriter(oFl);
+				PrintWriter pwt = new PrintWriter(fwt);
+				pwt.print(aLineOfData);
+				pwt.close();
+			}
+
+			//5.关闭
+			bf.close();
+			fr.close();
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+
+
+	public static String deal(String express) {
+		String regex = "((add)|(sub)|(max)|(min)|(doubleMe))\\(\\d{1,}(,\\d{1,})?\\)";
+		Pattern p = Pattern.compile(regex);
+		Matcher m = p.matcher(express);
+		String result = express;
+		while(m.find()){
+			String basicExpress = m.group();
+			String s = cal(basicExpress);
+			System.out.println(basicExpress+"="+s);
+			basicExpress = basicExpress.replaceAll("\\(", "\\\\(");
+			basicExpress = basicExpress.replaceAll("\\)","\\\\)");
+			System.out.println("表达式为："+result);
+			result = result.replaceAll(basicExpress, s);
+			System.out.println("替换后"+result);
+			m = p.matcher(result);
+		}
+		String info="";
+		System.out.println("运算结果：");
+		System.out.println(express+"="+result);
+		info = express+"="+result;
+		return info;
+}
+
+	public static String cal(String a){
+		int pos1,pos2,pos3;
+
+		int result = 0;
+		String array[] = new String[4];
+		pos1 = a.indexOf("(");
+		pos2 = a.indexOf(")");
+		pos3 = a.indexOf(",");
+		array[0] = a.substring(0, pos1);
+		array[1] = a.substring(pos1+1, pos3);
+		array[2] = a.substring(pos3+1, pos2);
+
+		Integer num1 = Integer.parseInt(array[1]);
+		Integer num2 = Integer.parseInt(array[2]);
+		switch(array[0]){
+		case "add":
+			result = num1 + num2;
+			break;
+		case "max":
+			if(num1>num2){
+				result = num1;
+			}else{
+				result = num2;
+			}
+			break;
+		case "sub":
+			result = num1-num2;
+			break;
+		case "min":
+			if(num1<num2){
+				result = num1;
+			}else{
+				result = num2;
+			}
+			break;
+		}
+		String info = "";
+		info += result;
+		return info;
+	}
+}
